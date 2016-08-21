@@ -1,0 +1,78 @@
+
+#loadingBox {
+    display: none;
+}
+
+#errorBox {
+    display: none;
+}
+
+#infoBox {
+    display: none;
+}
+
+#viewHome {
+    display: none;
+}
+
+#viewRegister {
+    display: none;
+}
+
+#viewRecipes {
+    display: none;
+}
+
+#viewMyRecipes {
+    display: none;
+}
+
+#viewProfile {
+    display: none;
+}
+
+#viewShowRecipe {
+    display: none;
+}
+
+#viewNewRecipe {
+    display: none;
+}
+
+#viewEditRecipe {
+    display: none;
+}
+
+html {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+}
+
+h1, div {
+    color: deepskyblue;
+    text-align: center;
+}
+
+footer {
+    display: inline-block;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    height: 50px;
+    background-color: beige;
+}
+
+footer p {
+    font-size: 16px;
+    color: deepskyblue;
+}
+
+#infoBox, #errorBox, #loadingBox {
+    padding: 20px;
+    text-align: center;
+}
