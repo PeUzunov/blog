@@ -3,9 +3,14 @@
 <head>
     <title>Healthy Food Recipes</title>
     <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> <!--Slidewhow-->
     <script src="scripts/jquery-3.0.0.js"></script>
     <script src="scripts/blogController.js"></script>
     <link rel="stylesheet" type="text/css" href="styles/main-style.css"/>
+    <link rel="icon" href="images/fv.png" type="image/png" sizes="16x16">
+    <link rel="images/fv.png" type="image/png" href="http://eg.com/favicon.png"/>
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script>tinymce.init({ selector:'textarea#recipeProducts' });</script>
 </head>
 
 <body>
@@ -23,6 +28,7 @@
         </ul>
         <div id="userGreeting"></div>
         <div>Logo image goes here</div>
+		<div class="slideshow-container"></div>
     </div>
 </header>
 
@@ -31,39 +37,70 @@
         <img src="images/loading_spinner.gif"/>
     </div>
 
-    <div id="infoBox"></div>
+    <div id="infoBox">
 
-    <div id="errorBox"></div>
+    </div>
+
+    <div id="errorBox">
+
+    </div>
 
     <section id="viewHome">
         <h1>Welcome to my blog. Here you will find easy recipes for healthy life</h1>
         <div>Description text goes here</div>
+	<!--Slidewhow start-->
+		<div class="mySlides fade">
+		  <div class="numbertext">1 / 3</div>
+		  <img src="images/slideshow_1.jpg" style="width:100%">
+		  <div class="text">Caption Text</div>
+		</div>
+
+		<div class="mySlides fade">
+		  <div class="numbertext">2 / 3</div>
+		  <img src="images/slideshow_2.jpg" style="width:100%">
+		  <div class="text">Caption Two</div>
+		</div>
+
+		<div class="mySlides fade">
+		  <div class="numbertext">3 / 3</div>
+		  <img src="images/slideshow_3.jpg" style="width:100%">
+		  <div class="text">Caption Three</div>
+		</div>
+
+		<br>
+
+		<div style="text-align:center">
+		  <span class="dot"></span>
+		  <span class="dot"></span>
+		  <span class="dot"></span>
+		</div>
+	<!--Slidewhow end-->
     </section>
 
     <section id="viewLogin">
         <h1>Вход за потребители</h1>
-        <form id="formLogin">
+        <form id="formLogin" name="myform" novalidate>
             <div>Потребителско име:</div>
-            <div><input type="text" id="loginUser" required class="inputBox"></div>
+            <div><input type="text" id="loginUser" placeholder="Enter Username" required class="inputBox"></div>
             <div>Парола:</div>
-            <div><input type="password" id="loginPassword" required class="inputBox"/></div>
+            <div><input type="password" id="loginPassword" placeholder="Enter Username" required class="inputBox"/></div>
             <div><button type="submit" class="button">Вход</button></div>
         </form>
     </section>
 
     <section id="viewRegister">
         <h1>Регистрация:</h1>
-        <form id="formRegister">
+        <form id="formRegister" name="myform" novalidate>
             <div>Потребителско име:</div>
-            <div><input type="text" id="registerUser" maxlength="50" required class="inputBox"/></div>
+            <div><input type="text" id="registerUser" placeholder="Enter Username" maxlength="50" required class="inputBox"/></div>
             <div>Парола:</div>
-            <div><input type="password" id="registerPassword" maxlength="50" required class="inputBox"/></div>
+            <div><input type="password" id="registerPassword" placeholder="Enter Username" maxlength="50" required class="inputBox"/></div>
             <div>Потвърдете паролата:</div>
-            <div><input type="password" id="registerPasswordConfirm" maxlength="50" required class="inputBox"/></div>
+            <div><input type="password" id="registerPasswordConfirm" placeholder="Enter Username" maxlength="50" required class="inputBox"/></div>
             <div>Име и фамилия:</div>
-            <div><input type="text" id="registerFullName" maxlength="100" required class="inputBox"/></div>
+            <div><input type="text" id="registerFullName" placeholder="Enter Username" maxlength="100" required class="inputBox"/></div>
             <div>Имейл адрес:</div>
-            <div><input type="email" id="registerEmail" maxlength="100" required class="inputBox"/></div>
+            <div><input type="email" id="registerEmail" placeholder="Enter Username" maxlength="100" required class="inputBox"/></div>
             <div><button type="submit" id="buttonRegister" class="button" >Регистрация</button></div>
         </form>
     </section>
@@ -92,10 +129,9 @@
     <section id="viewShowRecipe">
         <div><button id="backButton" class="button">Обратно към всички рецепти</button></div>
         <div id="showRecipeTitle"></div>
-        <div id="showRecipeImage">
-            <img src="" id="showRecipeImage1" class="recipeImage"/>
+        <div id="showImage">
+            <img src="" id="showRecipeImage" class="recipeImage"/>
         </div>
-        <div id="showRecipeDescription"></div>
         <div id="showRecipeCondition"></div>
         <div id="showRecipePrice"></div>
         <div id="showRecipeProducts"></div>
@@ -103,70 +139,72 @@
     </section>
 
     <section id="viewNewRecipe">
-        <form id="formCreateRecipe">
+        <form id="formCreateRecipe" name="myform" novalidate>
             <div>Име на рецептата:</div>
             <div><input type="text" id="recipeTitle" maxlength="100" required class="inputBox"/></div>
             <div>Категория:</div>
             <div><select id="recipeCategory" required class="inputBox">
-                <option value="1">Салати и дресинги</option>
-				<option value="2">Крекери, пици и хлябове</option>
-                <option value="3">Закуски</option>
-                <option value="4">Основни</option>
-                <option value="5">Десерти</option>
-                <option value="6">Вегетариански</option>
-                <option value="7">Безглутенови</option>
-                <option value="8">Веган</option>
-                <option value="9">За диабетици</option>
-                <option value="10">Разни</option>
+                <option value="Салати и дресинги">Салати и дресинги</option>
+				<option value="Крекери, пици и хлябове">Крекери, пици и хлябове</option>
+                <option value="Закуски">Закуски</option>
+                <option value="Основни">Основни</option>
+                <option value="Десерти">Десерти</option>
+                <option value="Вегетариански">Вегетариански</option>
+                <option value="Безглутенови">Безглутенови</option>
+                <option value="Веган">Веган</option>
+                <option value="За диабетици">За диабетици</option>
+                <option value="Разни">Разни</option>
             </select></div>
 			<div>Брой порции:</div>
 			<div><input type="number" id="recipeServings" required class="inputBox"/></div>
 			<div>Време за подготовка:</div>
-			<div><input type="number" id="recipePreparationTime" placeholder="минути" required class="inputBox"/></div>
+			<div><input type="number" id="recipePreparationTime" placeholder="в минути" required class="inputBox"/></div>
 			<div>Време за приготвяне:</div>
-			<div><input type="number" id="recipeMakingTime" placeholder="минути" required class="inputBox"/></div>
+			<div><input type="number" id="recipeMakingTime" placeholder="в минути" required class="inputBox"/></div>
 			<div>Цена:</div>
             <div><input type="number" id="recipePrice" placeholder="в български лева" required class="inputBox"/></div>
 			<div>Необходими продукти:</div>
             <div><textarea rows="10" id="recipeProducts" maxlength="5000" required class="inputBox"></textarea></div>
             <div>Начин на приготвяне:</div>
             <div><textarea rows="15" id="recipeDescription" maxlength="10000" required class="inputBox"></textarea></div>
-            <div><input type="url" id="recipeImage1Url" class="inputBox" required placeholder="Required"></div>
+            <div>Kaчи снимка:</div>
+            <div><input type="url" id="recipeImageUrl" class="inputBox" required placeholder="Required"></div>
             <div><input type="submit" value="Publish" class="button"/></div>
         </form>
     </section>
 
     <section id="viewEditRecipe">
-        <form id="formEditRecipe">
-                        <div>Име на рецептата:</div>
+        <form id="formEditRecipe" name="myform" novalidate>
+            <div>Име на рецептата:</div>
             <div><input type="text" id="recipeTitleEdit" maxlength="100" required class="inputBox"/></div>
             <div>Категория:</div>
             <div><select id="recipeCategoryEdit" required class="inputBox">
-                <option value="1">Салати и дресинги</option>
-				<option value="2">Крекери, пици и хлябове</option>
-                <option value="3">Закуски</option>
-                <option value="4">Основни</option>
-                <option value="5">Десерти</option>
-                <option value="6">Вегетариански</option>
-                <option value="7">Безглутенови</option>
-                <option value="8">Веган</option>
-                <option value="9">За диабетици</option>
-                <option value="10">Разни</option>
+                <option value="Салати и дресинги">Салати и дресинги</option>
+                <option value="Крекери, пици и хлябове">Крекери, пици и хлябове</option>
+                <option value="Закуски">Закуски</option>
+                <option value="Основни">Основни</option>
+                <option value="Десерти">Десерти</option>
+                <option value="Вегетариански">Вегетариански</option>
+                <option value="Безглутенови">Безглутенови</option>
+                <option value="Веган">Веган</option>
+                <option value="За диабетици">За диабетици</option>
+                <option value="Разни">Разни</option>
             </select></div>
-			<div>Брой порции:</div>
-			<div><input type="number" id="recipeServingsEdit" required class="inputBox"/></div>
-			<div>Време за подготовка:</div>
-			<div><input type="number" id="recipePreparationTimeEdit" placeholder="минути" required class="inputBox"/></div>
-			<div>Време за приготвяне:</div>
-			<div><input type="number" id="recipeMakingTimeEdit" placeholder="минути" required class="inputBox"/></div>
-			<div>Цена:</div>
+            <div>Брой порции:</div>
+            <div><input type="number" id="recipeServingsEdit" required class="inputBox"/></div>
+            <div>Време за подготовка:</div>
+            <div><input type="number" id="recipePreparationTimeEdit" placeholder="в минути" required class="inputBox"/></div>
+            <div>Време за приготвяне:</div>
+            <div><input type="number" id="recipeMakingTimeEdit" placeholder="в минути" required class="inputBox"/></div>
+            <div>Цена:</div>
             <div><input type="number" id="recipePriceEdit" placeholder="в български лева" required class="inputBox"/></div>
-			<div>Необходими продукти:</div>
+            <div>Необходими продукти:</div>
             <div><textarea rows="10" id="recipeProductsEdit" maxlength="5000" required class="inputBox"></textarea></div>
             <div>Начин на приготвяне:</div>
             <div><textarea rows="15" id="recipeDescriptionEdit" maxlength="10000" required class="inputBox"></textarea></div>
-            <div><input type="url" id="recipeImage1UrlEdit" class="inputBox" required placeholder="Required"></div>
-            <div><input type="submit" value="Edit" class="button"/></div>
+            <div>Kaчи снимка:</div>
+            <div><input type="url" id="recipeImageUrlEdit" class="inputBox" required placeholder="Required"></div>
+            <div><input type="submit" value="Publish" class="button"/></div>
         </form>
     </section>
 </main>
