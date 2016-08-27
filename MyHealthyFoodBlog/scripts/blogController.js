@@ -4,7 +4,7 @@ const kinveyBaseUrl = 'https://baas.kinvey.com/';
 
 $(function() {
     showView("Home");
-	showSlides();
+    carousel();
     showHideNavigationLinks();
     $("#linkHome").click(function() {showView("Home")});
     $("#linkLogin").click(function() {showView("Login")});
@@ -13,7 +13,11 @@ $(function() {
     $("#linkNewRecipe").click(function() {showView("NewRecipe");});
     $("#linkMyRecipes").click(function() {drawRecipes(sessionStorage.uid); showView("MyRecipes")});
     $("#linkProfile").click(function() {profileLoadInformation(); showView("Profile")});
-    $("#registerUser").click(function () {$(".UsernameError").slideUp(300)});
+    $("body").click(function () {$("#errorBox").slideUp(300)});
+	/*$("#registerUser").click(function () {$(".fullnameError").slideUp(300)});
+	$("#registerUser").click(function () {$(".passwordError").slideUp(300)});
+	$("#registerUser").click(function () {$(".passwordConfirmError").slideUp(300)});
+	$("#registerUser").click(function () {$(".emailError").slideUp(300)});*/
     $("#infoBox").click(function () {$("#infoBox").slideUp(300)});
     $("#formLogin").submit(function (f) {f.preventDefault(); login()});
     $("#formRegister").submit(function (f) {f.preventDefault(); register()});
@@ -44,24 +48,21 @@ $(function() {
 console.log(1));*/
 
 // slideShow start http://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_slideshow
-let slideIndex = 0;
-showSlides();
-function showSlides() {
+var myIndex = 0;
+$(document).ready(function(){
+    carousel()
+})
 
-    let i;
-    let slides = document.getElementsByClassName("mySlides");
-    let dots = document.getElementsByClassName("dot");
-    for (i = 0; i < slides.length; i++) {
-       slides[i].style.display = "none";
+function carousel() {
+    var i;
+    var x = document.getElementsByClassName("mySlides");
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
     }
-    slideIndex++;
-    if (slideIndex> slides.length) {slideIndex = 1}
-    for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-    }
-    slides[slideIndex-1].style.display = "block";
-    dots[slideIndex-1].className += " active";
-    setTimeout(showSlides, 2000); // Change image every 2 seconds
+    myIndex++;
+    if (myIndex > x.length) {myIndex = 1}
+        x[myIndex-1].style.display = "block";
+    setTimeout(carousel, 2000); // Change image every 2 seconds
 }
 // slideShow end
 
@@ -136,34 +137,73 @@ function login() {
         sessionStorage.uid = data._id;
         sessionStorage.email = data.email;
         showView("Home");
-        showInfo("Login Successful!");
+        showInfo("Успешно влязохте в профила си!");
         showHideNavigationLinks();
     }
 }
 
 function register()  {
-    let regex = /^[a-zA-Z]+$/;
-    if(($('#registerUser').val().length >= 5) &&($('#registerUser').val().length <= 20) && (regex.test($('#registerUser').val()))){
+    let regexUsermane = /^[a-zA-Z0-9]+$/;
+	let regexPassword = /^[a-zA-Z0-9]+$/;
+	let regexFullname = /^[a-zA-Z]+$/;
+	let regexEmail = /^[a-zA-Z]+[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+	
+    if(($('#registerUser').val().length >= 5) &&($('#registerUser').val().length <= 20) && (regexUsermane.test($('#registerUser').val()))){
         var usernameReg = $('#registerUser').val();
     }else{
-        showError("Потребителското име трябва да е межву 5 и 20 символа");
-        $( "#errorBox" ).addClass( "UsernameError" );
+        showError("Потребителското име трябва да е между 5 и 20 символа букви и/или цифри");
+        $( "#errorBox" ).addClass( "usernameError" );
         return;
     }
-    if(($('#registerFullName').val().length >= 5) &&($('#registerFullName').val().length <= 30) && (regex.test($('#registerFullName').val()))){
+	
+	if(($('#registerPassword').val().length >= 5) &&($('#registerPassword').val().length <= 30) && (regexPassword.test($('#registerPassword').val()))){
+        var passwordReg = $('#registerPassword').val();
+    }else{
+        showError("Паролата трябва да са между е между 5 и 30 символа букви и/или цифри");
+		$( "#errorBox" ).addClass( "passwordError" );
+		$('#registerPassword').val("");
+        return;
+    }
+	
+	if(($('#registerPasswordConfirm').val().length >= 5) &&($('#registerPasswordConfirm').val().length <= 30) && (regexPassword.test($('#registerPasswordConfirm').val()))){
+        var passwordReg = $('#registerPasswordConfirm').val();
+    }else{
+        showError("Паролата трябва да са между е между 5 и 30 символа букви и/или цифри");
+		$( "#errorBox" ).addClass( "passwordConfirmError" );
+        $('#registerPasswordConfirm').val("");
+        return;
+    }
+	
+	if ($('#registerPassword').val() !== $('#registerPasswordConfirm').val()) {
+		showError("Паролите не съвпадат, моля опитайте отново!");
+        $('#registerPassword').val("");
+        $('#registerPasswordConfirm').val("");
+		return;
+	}
+	
+	if(($('#registerFullName').val().length >= 5) &&($('#registerFullName').val().length <= 30) && (regexFullname.test($('#registerFullName').val()))){
         var fullnameReg = $('#registerFullName').val();
     }else{
-        showError("Името и фалимията трябва да са между е межву 5 и 30 символа");
+        showError("Името и фалимията трябва да са между 5 и 30 символа съставено единствено от букви");
+		$( "#errorBox" ).addClass( "fullnameError" );
         return;
     }
-    if ($('#registerPassword').val() === $('#registerPasswordConfirm').val()) {
+	
+	if(($('#registerEmail').val().length >= 5) &&($('#registerEmail').val().length <= 30) && (regexEmail.test($('#registerEmail').val()))){
+        var emailReg = $('#registerEmail').val();
+    }else{
+        showError("Невалиден имейл адрес. Моля опитайте отново!");
+		$( "#errorBox" ).addClass( "emailError" );
+        return;
+    }
+
         let authBase64 = btoa(kinveyAppID + ":" + kinveyAppSecret);
         let registerUrl = kinveyBaseUrl + "user/" + kinveyAppID + "/";
         let registerData = ({
             username: usernameReg,
-            password: $('#registerPassword').val(),
+            password: passwordReg,
             fullname: fullnameReg,
-            email: $('#registerEmail').val()
+            email: emailReg
         });
         $.ajax({
             method: "POST",
@@ -181,13 +221,9 @@ function register()  {
             sessionStorage.email = data.email;
             showView("Home");
             showHideNavigationLinks();
-            showInfo("Успешна регистрация!")
+            showInfo("Успешна регистрация!");
         }
-    } else {
-        showError("Паролите не съвпадат, моля опитайте отново!");
-        $('#registerPassword').val("");
-        $('#registerPasswordConfirm').val("");
-    }
+
 }
 
 function profileLoadInformation() {
@@ -209,15 +245,16 @@ function createRecipe() {
         preparationTime: $("#recipePreparationTime").val(),
         makingTime: $("#recipeMakingTime").val(),
         price: $("#recipePrice").val(),
-        products: $("#tinymce").val(),
+        products: $("#recipeProducts").val(),
         description: $("#recipeDescription").val(),
         image: $("#recipeImageUrl").val(),
+		date: moment().lang("bg").format('llll'),
         authorId: sessionStorage.uid,
         authorUsername: sessionStorage.username,
         authorFullName: sessionStorage.fullname
     };
-    console.log($("#tinymce").val());
-    console.log($("#recipeProducts").val());
+    console.log($("#recipeProducts").val() + " produkti");
+    console.log($("#recipeDescription").val() + " progotvqne");
     $.ajax({
         method: "POST",
         url: recipesUrl,
@@ -260,22 +297,38 @@ function drawRecipes(userID) {
             for (let recipe of recipes) {
                 if (recipe.authorId == userID) {
                     let totalTime = parseInt(recipe.preparationTime) + parseInt(recipe.makingTime);
+                    if(totalTime >= 60) {
+                        var hours = Math.trunc(totalTime / 60) + " часа и ";
+                        var minutes = totalTime % 60 + " минути";
+                    }else if (totalTime < 60){
+                        hours = '';
+                        minutes = totalTime + " минути"
+                    }
                     let recipeDiv = $("<div>", {"class": "recipeBox", "data-recipe-id" : recipe._id});
                     recipeDiv.append($("<div>").append($('<img>', {src: recipe.image, height: 230})));
                     recipeDiv.append($("<div class='recipeTitle'>").append(recipe.title));
                     recipeDiv.append($("<div class='recipeCategory'>").append("Категория: " + recipe.category));
-                    recipeDiv.append($("<div class='recipeTotalPreparationTime'>").append("общо време за приготвяне: " + totalTime + " минути"));
+                    recipeDiv.append($("<div class='recipeProducts'>").append("Необходими продукти: " + recipe.products));
+                    recipeDiv.append($("<div class='recipeTotalPreparationTime'>").append("общо време за приготвяне: " + hours + minutes));
                     $("#myRecipes").append(recipeDiv);
                 }
             }
         } else {
             for (let recipe of recipes) {
                 let totalTime = parseInt(recipe.preparationTime) + parseInt(recipe.makingTime);
+                if(totalTime >= 60) {
+                    var hours = Math.trunc(totalTime / 60) + " часа и ";
+                    var minutes = totalTime % 60 + " минути";
+                }else if (totalTime < 60){
+                    hours = '';
+                    minutes = totalTime + " минути"
+                }
                 let recipeDiv = $("<div>", {class: "recipeBox", "data-recipe-id" : recipe._id});
                 recipeDiv.append($("<div>").append($('<img>', {src: recipe.image, height: 230})));
                 recipeDiv.append($("<div class='recipeTitle'>").append(recipe.title));
                 recipeDiv.append($("<div class='recipeCategory'>").append("Категория: " + recipe.category));
-                recipeDiv.append($("<div class='recipeTotalPreparationTime'>").append("общо време за приготвяне: " + totalTime + " минути"));
+                recipeDiv.append($("<div class='recipeProducts'>").append("Необходими продукти: " + recipe.products));
+                recipeDiv.append($("<div class='recipeTotalPreparationTime'>").append("общо време за приготвяне: " + hours + minutes));
                 $("#recipes").append(recipeDiv);
             }
             showView("Recipes");
@@ -302,20 +355,22 @@ function showRecipe(recipeId) {
     });
     function recipeLoaded(recipe) {
         $(".func").remove();
+        $('#showRecipeDate').text(recipe.date);
         $('#showRecipeTitle').text(recipe.title);
         $('#showRecipeCategory').text(recipe.category);
         $('#showRecipeServings').text(recipe.servings);
         $('#showRecipePreparationTime').text(recipe.preparationTime);
         $('#showRecipeMakingTime').text(recipe.makingTime);
         $('#showRecipePrice').text(recipe.price);
-        $('#showRecipeProducts').text(recipe.products);
-        $('#showRecipeDescription').text(recipe.description);
+        $('#showRecipeProducts').append(recipe.products);
+        $('#showRecipeDescription').append(recipe.description);
         $('#showRecipeImage').prop("src", recipe.image);
         $('#showRecipeUser').text(recipe.authorUsername);
         let sel = $('#viewShowRecipe');
+        let adminCheck = $("#loginUser").val();
         sel.attr("data-post-id", recipeId);
         sel.attr("data-post-category", recipe.category);
-        if (recipe.authorId == sessionStorage.uid) {
+        if ((recipe.authorId == sessionStorage.uid) || (sessionStorage.username == 'admin')) {
             sel.append($("<div>").append($("<button class='func button' id='buttonEditRecipe'>Редактирай рецепта</button>")));
             sel.append($("<div>").append($("<button class='func button' id='buttonDeleteRecipe'>Изтрий рецепта" +
                 "</button>")));
@@ -379,7 +434,7 @@ function editRecipe(recipeId) {
 }
 
 function showDeleteRecipeConfirmation() {
-    $("#buttonDeleteRecipe").after($("<div style='display: none;'>Изтрива цялата рецепта! <br/> Click the button to confirm and delete the recipe: <div><button class='func button' id='confirmRecipeDelete'>Confirm</button></div>").fadeIn(300)).hide();
+    $("#buttonDeleteRecipe").after($("<div style='display: none;'>Внимание! Ще изтриете цялата рецепта!<div><button class='func button' id='confirmRecipeDelete'>Изтрий</button></div>").fadeIn(300)).hide();
 }
 
 function deleteRecipe(recipeId) {

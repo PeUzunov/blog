@@ -3,14 +3,16 @@
 <head>
     <title>Healthy Food Recipes</title>
     <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1"> <!--Slidewhow-->
+	<<meta name="viewport" content="width=device-width, initial-scale=1"> <!--Slidewhow-->
     <script src="scripts/jquery-3.0.0.js"></script>
+    <script src="scripts/moment-with-locales.js"></script>
     <script src="scripts/blogController.js"></script>
     <link rel="stylesheet" type="text/css" href="styles/main-style.css"/>
     <link rel="icon" href="images/fv.png" type="image/png" sizes="16x16">
     <link rel="images/fv.png" type="image/png" href="http://eg.com/favicon.png"/>
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script>tinymce.init({ selector:'textarea#recipeProducts' });</script>
+    <script>tinymce.init({ selector:'textarea#recipeDescription' });</script>
 </head>
 
 <body>
@@ -49,32 +51,12 @@
         <h1>Welcome to my blog. Here you will find easy recipes for healthy life</h1>
         <div>Description text goes here</div>
 	<!--Slidewhow start-->
-		<div class="mySlides fade">
-		  <div class="numbertext">1 / 3</div>
-		  <img src="images/slideshow_1.jpg" style="width:100%">
-		  <div class="text">Caption Text</div>
-		</div>
-
-		<div class="mySlides fade">
-		  <div class="numbertext">2 / 3</div>
-		  <img src="images/slideshow_2.jpg" style="width:100%">
-		  <div class="text">Caption Two</div>
-		</div>
-
-		<div class="mySlides fade">
-		  <div class="numbertext">3 / 3</div>
-		  <img src="images/slideshow_3.jpg" style="width:100%">
-		  <div class="text">Caption Three</div>
-		</div>
-
-		<br>
-
-		<div style="text-align:center">
-		  <span class="dot"></span>
-		  <span class="dot"></span>
-		  <span class="dot"></span>
-		</div>
-	<!--Slidewhow end-->
+        <div class="w3-content w3-section" style="max-width:500px">
+            <img class="mySlides" src="images/slideshow_1.jpg" style="width:100%">
+            <img class="mySlides" src="images/slideshow_2.jpg" style="width:100%">
+            <img class="mySlides" src="images/slideshow_3.jpg" style="width:100%">
+        </div>
+        <!--Slidewhow end-->
     </section>
 
     <section id="viewLogin">
@@ -128,13 +110,20 @@
 
     <section id="viewShowRecipe">
         <div><button id="backButton" class="button">Обратно към всички рецепти</button></div>
+        <div>Дата на постване:</div>
+        <div id="showRecipeDate"></div>
+        <div>Заглавие на рецептата:</div>
         <div id="showRecipeTitle"></div>
         <div id="showImage">
             <img src="" id="showRecipeImage" class="recipeImage"/>
         </div>
-        <div id="showRecipeCondition"></div>
+        <div>Приготвяне:</div>
+        <div id="showRecipeDescription"></div>
+        <div>Цена:</div>
         <div id="showRecipePrice"></div>
+        <div>Продукти:</div>
         <div id="showRecipeProducts"></div>
+        <div>Автор:</div>
         <div id="showRecipeUser"></div>
     </section>
 
