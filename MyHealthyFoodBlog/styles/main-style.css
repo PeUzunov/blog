@@ -37,6 +37,27 @@ body {
     display: none;
 }
 
+/*adminski CREATE th AND td CLASS TO STYLE*/
+#viewUsers {
+    display: none;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+table th {
+    background: #ddd;
+    font-size: 1.2em;
+    padding: 10px;
+}
+
+table td {
+    background: #ddd;
+    padding: 5px 10px;
+}
+/*adminski*/
+
 #viewShowRecipe {
     display: none;
 }

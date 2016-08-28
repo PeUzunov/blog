@@ -36,6 +36,9 @@ $(function() {
             deleteRecipe($('#viewShowRecipe').attr("data-post-id"));
         });
     $("#backButton").click(function () {showPreviousView()});
+    //adminski
+    $("#linkUsers").click(function() {drawUsers(); showView("Users")});
+    //adminski
 });
 
 /*$("#buttonRegister").click(/!*function () {
@@ -103,6 +106,11 @@ function showHideNavigationLinks() {
         $("#linkProfile").show();
         $("#linkLogout").show();
         $("#userGreeting").append("Здравей, " + sessionStorage.username + "!");
+        // adminski
+        if (sessionStorage.username == 'admin') {
+            $("#linkUsers").show();
+        }
+        // adminski
     } else {
         $("#linkLogin").show();
         $("#linkRegister").show();
@@ -110,6 +118,9 @@ function showHideNavigationLinks() {
         $("#linkNewRecipe").hide();
         $("#linkMyRecipes").hide();
         $("#linkProfile").hide();
+        //adminski
+        $("#linkUsers").hide();
+        //adminski
         $("#linkLogout").hide();
         $("#userGreeting").empty();
     }
@@ -203,7 +214,7 @@ function register()  {
             username: usernameReg,
             password: passwordReg,
             fullname: fullnameReg,
-            email: emailReg
+            email: emailReg,
         });
         $.ajax({
             method: "POST",
@@ -271,6 +282,69 @@ function createRecipe() {
         showInfo("Успешно публикувахте рецепта!")
     }
 }
+
+// adminski
+function drawUsers(userID) {
+    let recipesGetUrl = kinveyBaseUrl + "user/" + kinveyAppID + "/";
+    let authHeaders = {"Authorization": "Kinvey " + sessionStorage.authToken};
+    $.ajax({
+        method: "GET",
+        url: recipesGetUrl,
+        headers: authHeaders,
+        success: usersLoaded,
+        error: showAjaxError
+    });
+
+    function usersLoaded(users, status) {
+        showInfo("Таблицата със всички потребители е успешно заредена");
+        let usersTable = $("<table>")
+            .append($("<tr>")
+                .append($('<th>Потребителско име:</th>'))
+                .append($('<th>Име и фамилия</th>'))
+                .append($('<th>Имейл адрес</th>'))
+                .append($('<th>Parola</th>'))
+            );
+        for (let user of users) {
+            usersTable.append(($("<tr>"))
+                .append($('<td></td>').text(user.username))
+                .append($('<td></td>').text(user.fullname))
+                .append($('<td></td>').text(user.email))
+                .append($('<td></td>').text(user._id))
+                .append($('<button class="addComment" type="button" onclick="addComment()" >Влез като този потребител</button>'))
+            );
+        }
+        $("#users").append(usersTable);
+    }
+}
+
+function addComment() {
+   // alert("Hello! I am an alert box!");
+    let authBase64 = btoa(kinveyAppID + ":" + kinveyAppSecret);
+    let loginUrl = kinveyBaseUrl + "user/" + kinveyAppID + "/login";
+    let loginData = ({
+        username: "test",
+        password: "test"
+    });
+    $.ajax({
+        method: "POST",
+        url: loginUrl,
+        data: loginData,
+        headers: {"Authorization" : "Basic " + authBase64},
+        success: loginSuccess,
+        error: showAjaxError
+    });
+    function loginSuccess(data, status) {
+        sessionStorage.authToken = data._kmd.authtoken;
+        sessionStorage.username = data.username;
+        sessionStorage.fullname = data.fullname;
+        sessionStorage.uid = data._id;
+        sessionStorage.email = data.email;
+        showView("Home");
+        showInfo("Успешно влязохте в профила си!");
+        showHideNavigationLinks();
+    }
+}
+// adminski
 
 function drawRecipes(userID) {
     let getForUser = (userID != null);
@@ -405,6 +479,8 @@ function showEditRecipeView(recipeId) {
 function editRecipe(recipeId) {
     let recipeEditUrl = kinveyBaseUrl + "appdata/" + kinveyAppID + "/recipes/" + recipeId;
     let authHeaders = {"Authorization": "Kinvey " + sessionStorage.authToken};
+    // let authHeaders = {"Authorization": "Kinvey " + "a8bd8dc6-37fd-45af-9b52-365b84452f2b.Vrrt/Lm2DGRxa1xIpdvmbiCNtFNjolG+EnzxID3G2Yk="};
+    // kato e slojeno tova raboti za vsichki recepti na test, zashtoto tova e negoviq auth token. trqbva ako e lognata admina, da se vzema na vsqka recepta auth tokena, username i vsichki ostnali danni da usera koito e sazdal tazi recepta i da se zaman[ samo auth tokena na adnima s tozi na usera sazdal receptata. taka pri edit avtora shte ostva sashtiq.
     let putData = {
         title: $("#recipeTitleEdit").val(),
         category: $("#recipeCategoryEdit").val(),
@@ -431,6 +507,7 @@ function editRecipe(recipeId) {
         showInfo("Успешно редактирахте рецепта!");
         showView("MyRecipes");
     }
+    console.log(authHeaders);
 }
 
 function showDeleteRecipeConfirmation() {
