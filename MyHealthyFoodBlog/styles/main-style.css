@@ -232,3 +232,17 @@ img {
 /* slideshow start */
 .mySlides {display:none;}
 /* slideshow end */
+
+.backToTopContainer{
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    display: none;
+}
+/*asjdhakdadsads 29.08*/
+
+.w3-content {
+    margin: auto;
+    max-width: 100%;
+    height: 315px;
+}

@@ -13,11 +13,10 @@ $(function() {
     $("#linkNewRecipe").click(function() {showView("NewRecipe");});
     $("#linkMyRecipes").click(function() {drawRecipes(sessionStorage.uid); showView("MyRecipes")});
     $("#linkProfile").click(function() {profileLoadInformation(); showView("Profile")});
+    //adminski
+    $("#linkUsers").click(function() {drawUsers(); showView("Users")});
+    //adminski
     $("body").click(function () {$("#errorBox").slideUp(300)});
-	/*$("#registerUser").click(function () {$(".fullnameError").slideUp(300)});
-	$("#registerUser").click(function () {$(".passwordError").slideUp(300)});
-	$("#registerUser").click(function () {$(".passwordConfirmError").slideUp(300)});
-	$("#registerUser").click(function () {$(".emailError").slideUp(300)});*/
     $("#infoBox").click(function () {$("#infoBox").slideUp(300)});
     $("#formLogin").submit(function (f) {f.preventDefault(); login()});
     $("#formRegister").submit(function (f) {f.preventDefault(); register()});
@@ -35,26 +34,30 @@ $(function() {
         .on("click", "#confirmRecipeDelete", function () {
             deleteRecipe($('#viewShowRecipe').attr("data-post-id"));
         });
-    $("#backButton").click(function () {showPreviousView()});
-    //adminski
-    $("#linkUsers").click(function() {drawUsers(); showView("Users")});
-    //adminski
+    $(window).on("scroll", function (e) {
+        var scroll = $(window).scrollTop();
+        if(scroll > 200){
+            $(".backToTopContainer").fadeIn(500);
+        }else{
+            $(".backToTopContainer").fadeOut(500);
+        }
+    });
 });
 
 /*$("#buttonRegister").click(/!*function () {
 
-    console.log($( "#errorBox" ).show())
-    if($( "#errorBox" ).show()){
-        $("#errorBox").css("display", "none")
-    }
-}*!/
-console.log(1));*/
+ console.log($( "#errorBox" ).show())
+ if($( "#errorBox" ).show()){
+ $("#errorBox").css("display", "none")
+ }
+ }*!/
+ console.log(1));*/
 
 // slideShow start http://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_slideshow
 var myIndex = 0;
 $(document).ready(function(){
     carousel()
-})
+});
 
 function carousel() {
     var i;
@@ -64,7 +67,7 @@ function carousel() {
     }
     myIndex++;
     if (myIndex > x.length) {myIndex = 1}
-        x[myIndex-1].style.display = "block";
+    x[myIndex-1].style.display = "block";
     setTimeout(carousel, 2000); // Change image every 2 seconds
 }
 // slideShow end
@@ -155,88 +158,88 @@ function login() {
 
 function register()  {
     let regexUsermane = /^[a-zA-Z0-9]+$/;
-	let regexPassword = /^[a-zA-Z0-9]+$/;
-	let regexFullname = /^[a-zA-Z]+$/;
-	let regexEmail = /^[a-zA-Z]+[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-	
+    let regexPassword = /^[a-zA-Z0-9]+$/;
+    let regexFullname = /^[a-zA-Z]+$/;
+    let regexEmail = /^[a-zA-Z]+[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+
     if(($('#registerUser').val().length >= 5) &&($('#registerUser').val().length <= 20) && (regexUsermane.test($('#registerUser').val()))){
         var usernameReg = $('#registerUser').val();
     }else{
         showError("Потребителското име трябва да е между 5 и 20 символа букви и/или цифри");
-        $( "#errorBox" ).addClass( "usernameError" );
+
         return;
     }
-	
-	if(($('#registerPassword').val().length >= 5) &&($('#registerPassword').val().length <= 30) && (regexPassword.test($('#registerPassword').val()))){
+
+    if(($('#registerPassword').val().length >= 5) &&($('#registerPassword').val().length <= 30) && (regexPassword.test($('#registerPassword').val()))){
         var passwordReg = $('#registerPassword').val();
     }else{
         showError("Паролата трябва да са между е между 5 и 30 символа букви и/или цифри");
-		$( "#errorBox" ).addClass( "passwordError" );
-		$('#registerPassword').val("");
+
+        $('#registerPassword').val("");
         return;
     }
-	
-	if(($('#registerPasswordConfirm').val().length >= 5) &&($('#registerPasswordConfirm').val().length <= 30) && (regexPassword.test($('#registerPasswordConfirm').val()))){
+
+    if(($('#registerPasswordConfirm').val().length >= 5) &&($('#registerPasswordConfirm').val().length <= 30) && (regexPassword.test($('#registerPasswordConfirm').val()))){
         var passwordReg = $('#registerPasswordConfirm').val();
     }else{
         showError("Паролата трябва да са между е между 5 и 30 символа букви и/или цифри");
-		$( "#errorBox" ).addClass( "passwordConfirmError" );
+
         $('#registerPasswordConfirm').val("");
         return;
     }
-	
-	if ($('#registerPassword').val() !== $('#registerPasswordConfirm').val()) {
-		showError("Паролите не съвпадат, моля опитайте отново!");
+
+    if ($('#registerPassword').val() !== $('#registerPasswordConfirm').val()) {
+        showError("Паролите не съвпадат, моля опитайте отново!");
         $('#registerPassword').val("");
         $('#registerPasswordConfirm').val("");
-		return;
-	}
-	
-	if(($('#registerFullName').val().length >= 5) &&($('#registerFullName').val().length <= 30) && (regexFullname.test($('#registerFullName').val()))){
+        return;
+    }
+
+    if(($('#registerFullName').val().length >= 5) &&($('#registerFullName').val().length <= 30) && (regexFullname.test($('#registerFullName').val()))){
         var fullnameReg = $('#registerFullName').val();
     }else{
         showError("Името и фалимията трябва да са между 5 и 30 символа съставено единствено от букви");
-		$( "#errorBox" ).addClass( "fullnameError" );
+
         return;
     }
-	
-	if(($('#registerEmail').val().length >= 5) &&($('#registerEmail').val().length <= 30) && (regexEmail.test($('#registerEmail').val()))){
+
+    if(($('#registerEmail').val().length >= 5) &&($('#registerEmail').val().length <= 30) && (regexEmail.test($('#registerEmail').val()))){
         var emailReg = $('#registerEmail').val();
     }else{
         showError("Невалиден имейл адрес. Моля опитайте отново!");
-		$( "#errorBox" ).addClass( "emailError" );
+
         return;
     }
 
-        let authBase64 = btoa(kinveyAppID + ":" + kinveyAppSecret);
-        let registerUrl = kinveyBaseUrl + "user/" + kinveyAppID + "/";
-        let registerData = ({
-            username: usernameReg,
-            password: passwordReg,
-            fullname: fullnameReg,
-            email: emailReg,
-        });
-        $.ajax({
-            method: "POST",
-            url: registerUrl,
-            data: registerData,
-            headers: {"Authorization": "Basic " + authBase64},
-            success: registerSuccess,
-            error: showAjaxError
-        });
-        function registerSuccess(data, status) {
-            sessionStorage.authToken = data._kmd.authtoken;
-            sessionStorage.username = data.username;
-            sessionStorage.fullname = data.fullname;
-            sessionStorage.uid = data._id;
-            sessionStorage.email = data.email;
-            showView("Home");
-            showHideNavigationLinks();
-            showInfo("Успешна регистрация!");
-        }
+    let authBase64 = btoa(kinveyAppID + ":" + kinveyAppSecret);
+    let registerUrl = kinveyBaseUrl + "user/" + kinveyAppID + "/";
+    let registerData = ({
+        username: usernameReg,
+        password: passwordReg,
+        fullname: fullnameReg,
+        email: emailReg,
+    });
+    $.ajax({
+        method: "POST",
+        url: registerUrl,
+        data: registerData,
+        headers: {"Authorization": "Basic " + authBase64},
+        success: registerSuccess,
+        error: showAjaxError
+    });
+    function registerSuccess(data, status) {
+        sessionStorage.authToken = data._kmd.authtoken;
+        sessionStorage.username = data.username;
+        sessionStorage.fullname = data.fullname;
+        sessionStorage.uid = data._id;
+        sessionStorage.email = data.email;
+        showView("Home");
+        showHideNavigationLinks();
+        showInfo("Успешна регистрация!");
+    }
 
 }
-
+// trqbva da moje user-a da si smenq email-a
 function profileLoadInformation() {
     let email = $("#profileEmail").empty();
     let fullname = $("#profileFullName").empty();
@@ -259,10 +262,13 @@ function createRecipe() {
         products: $("#recipeProducts").val(),
         description: $("#recipeDescription").val(),
         image: $("#recipeImageUrl").val(),
-		date: moment().lang("bg").format('llll'),
+        date: moment().locale("bg").format('llll'),
         authorId: sessionStorage.uid,
         authorUsername: sessionStorage.username,
-        authorFullName: sessionStorage.fullname
+        authorFullName: sessionStorage.fullname,
+        //zapisva authtokena v recepti
+        authorAuthToken: sessionStorage.authToken
+        //zapisva authtokena v recepti
     };
     console.log($("#recipeProducts").val() + " produkti");
     console.log($("#recipeDescription").val() + " progotvqne");
@@ -283,7 +289,7 @@ function createRecipe() {
     }
 }
 
-// adminski
+// adminski nachalo
 function drawUsers(userID) {
     let recipesGetUrl = kinveyBaseUrl + "user/" + kinveyAppID + "/";
     let authHeaders = {"Authorization": "Kinvey " + sessionStorage.authToken};
@@ -310,15 +316,15 @@ function drawUsers(userID) {
                 .append($('<td></td>').text(user.fullname))
                 .append($('<td></td>').text(user.email))
                 .append($('<td></td>').text(user._id))
-                .append($('<button class="addComment" type="button" onclick="addComment()" >Влез като този потребител</button>'))
+                .append($('<button class="addComment" type="button" onclick="addComment()" >Детайли</button>'))
             );
         }
         $("#users").append(usersTable);
     }
 }
-
+// logva se kato potrebitel test, ili vseki drug ama trqbva username i pass. trqbva da se napravi da ti dava vazmojnost da smenqsh detailite na vseki user i da go iztrivash.
 function addComment() {
-   // alert("Hello! I am an alert box!");
+    // alert("Hello! I am an alert box!");
     let authBase64 = btoa(kinveyAppID + ":" + kinveyAppSecret);
     let loginUrl = kinveyBaseUrl + "user/" + kinveyAppID + "/login";
     let loginData = ({
@@ -344,7 +350,7 @@ function addComment() {
         showHideNavigationLinks();
     }
 }
-// adminski
+// adminski krai
 
 function drawRecipes(userID) {
     let getForUser = (userID != null);
@@ -367,6 +373,7 @@ function drawRecipes(userID) {
     function recipesLoaded (recipes, status) {
         $("#recipes").empty();
         $("#myRecipes").empty();
+        console.log("getForUser", getForUser)
         if (getForUser) {
             for (let recipe of recipes) {
                 if (recipe.authorId == userID) {
@@ -389,6 +396,9 @@ function drawRecipes(userID) {
             }
         } else {
             for (let recipe of recipes) {
+                if(recipe.category !== "Салати и дресинги"){
+                    continue;
+                }
                 let totalTime = parseInt(recipe.preparationTime) + parseInt(recipe.makingTime);
                 if(totalTime >= 60) {
                     var hours = Math.trunc(totalTime / 60) + " часа и ";
@@ -429,6 +439,16 @@ function showRecipe(recipeId) {
     });
     function recipeLoaded(recipe) {
         $(".func").remove();
+        //adminski
+        if (sessionStorage.username == 'admin') {
+            $("#viewShowRecipe").append("<div>Authtoken na user-a</div>"); // zashto izliza nai dolu na stranicata???
+            $('#showAuthorFullName').text(recipe.authorFullName);
+            $('#showAuthorAuthorId').text(recipe.authorId);
+            $('#showAuthorUsernamme').text(recipe.authorUsername);
+            $('#showAuthorAuthToken').text(recipe.userAuthToken);
+        }
+        //adminski
+
         $('#showRecipeDate').text(recipe.date);
         $('#showRecipeTitle').text(recipe.title);
         $('#showRecipeCategory').text(recipe.category);
@@ -441,7 +461,6 @@ function showRecipe(recipeId) {
         $('#showRecipeImage').prop("src", recipe.image);
         $('#showRecipeUser').text(recipe.authorUsername);
         let sel = $('#viewShowRecipe');
-        let adminCheck = $("#loginUser").val();
         sel.attr("data-post-id", recipeId);
         sel.attr("data-post-category", recipe.category);
         if ((recipe.authorId == sessionStorage.uid) || (sessionStorage.username == 'admin')) {
@@ -455,6 +474,10 @@ function showRecipe(recipeId) {
 
 function showEditRecipeView(recipeId) {
     $("#viewEditRecipe").attr("data-post-id", recipeId);
+    //adminski
+    //let userAuthTokenShow = $('#showUserAuthToken').text();
+    //adminski
+
     let postTitle = $('#showRecipeTitle').text();
     let postCategory = $('#showRecipeCategory').attr("data-post-category");
     let postServings = $('#showRecipeServings').text();
@@ -464,6 +487,9 @@ function showEditRecipeView(recipeId) {
     let postProducts = $('#showRecipeProducts').text();
     let postDescription = $('#showRecipeDescription').text();
     let postImage= $('#showRecipeImage').attr("src");
+    //adminski
+   // $('#showUserAuthTokenEdit').val(userAuthTokenShow);
+    //adminski
     $('#recipeTitleEdit').val(postTitle);
     $('#recipeCategoryEdit').val(postCategory);
     $('#showRecipeServingsEdit').val(postServings);
@@ -477,8 +503,24 @@ function showEditRecipeView(recipeId) {
 }
 
 function editRecipe(recipeId) {
+    let authorFullNameEdit = sessionStorage.fullname;
+    let authorIdEdit = sessionStorage.uid;
+    let authorUsernameEdit = sessionStorage.username;
+    let authorAuthTokenEdit = sessionStorage.authToken;
+
     let recipeEditUrl = kinveyBaseUrl + "appdata/" + kinveyAppID + "/recipes/" + recipeId;
-    let authHeaders = {"Authorization": "Kinvey " + sessionStorage.authToken};
+    // adminski
+    if (sessionStorage.username == 'admin') {
+        authorFullNameEdit = $('#showAuthorFullName').text();
+        authorIdEdit = $('#showAuthorAuthorId').text();
+        authorUsernameEdit = $('#showAuthorUsernamme').text();
+        authorAuthTokenEdit = $('#showAuthorAuthToken').text();
+    }
+    // adminski
+    console.log(authorAuthTokenEdit + " sled definirane");
+
+    let authHeaders = {"Authorization": "Kinvey " + authorAuthTokenEdit};
+
     // let authHeaders = {"Authorization": "Kinvey " + "a8bd8dc6-37fd-45af-9b52-365b84452f2b.Vrrt/Lm2DGRxa1xIpdvmbiCNtFNjolG+EnzxID3G2Yk="};
     // kato e slojeno tova raboti za vsichki recepti na test, zashtoto tova e negoviq auth token. trqbva ako e lognata admina, da se vzema na vsqka recepta auth tokena, username i vsichki ostnali danni da usera koito e sazdal tazi recepta i da se zaman[ samo auth tokena na adnima s tozi na usera sazdal receptata. taka pri edit avtora shte ostva sashtiq.
     let putData = {
@@ -491,10 +533,14 @@ function editRecipe(recipeId) {
         products: $("#recipeProductsEdit").val(),
         description: $("#recipeDescriptionEdit").val(),
         image: $("#recipeImageUrlEdit").val(),
-        authorId: sessionStorage.uid,
-        authorUsername: sessionStorage.username,
-        authorFullName: sessionStorage.fullname
+        authorFullName: authorFullNameEdit,
+        authorId: authorIdEdit,
+        authorUsername: authorUsernameEdit,
+        // adminski
+        userAuthToken: authorAuthTokenEdit
+        // adminski
     };
+    console.log(authorAuthTokenEdit + " predi ajax");
     $.ajax({
         method: "PUT",
         url: recipeEditUrl,
@@ -507,6 +553,7 @@ function editRecipe(recipeId) {
         showInfo("Успешно редактирахте рецепта!");
         showView("MyRecipes");
     }
+    console.log(authorAuthTokenEdit + " v kraq");
     console.log(authHeaders);
 }
 

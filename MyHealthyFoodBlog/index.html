@@ -3,12 +3,12 @@
 <head>
     <title>Healthy Food Recipes</title>
     <meta charset="UTF-8">
-	<<meta name="viewport" content="width=device-width, initial-scale=1"> <!--Slidewhow-->
+	<meta name="viewport" content="width=device-width, initial-scale=1"> <!--Slidewhow-->
     <script src="scripts/jquery-3.0.0.js"></script>
     <script src="scripts/moment-with-locales.js"></script>
     <script src="scripts/blogController.js"></script>
     <link rel="stylesheet" type="text/css" href="styles/main-style.css"/>
-    <link rel="icon" href="images/fv.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="images/fv.ico" type="image/png" sizes="16x16">
     <link rel="images/fv.png" type="image/png" href="http://eg.com/favicon.png"/>
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script>tinymce.init({ selector:'textarea#recipeProducts' });</script>
@@ -16,6 +16,16 @@
 </head>
 
 <body>
+<!--Facebook
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/bg_BG/sdk.js#xfbml=1&version=v2.7";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+-->
 <header>
     <div class="navbar">
         <ul class="navbar-links">
@@ -54,12 +64,19 @@
         <h1>Welcome to my blog. Here you will find easy recipes for healthy life</h1>
         <div>Description text goes here</div>
 	<!--Slidewhow start-->
-        <div class="w3-content w3-section" style="max-width:500px">
+        <div class="w3-content w3-section">
             <img class="mySlides" src="images/slideshow_1.jpg" style="width:100%">
             <img class="mySlides" src="images/slideshow_2.jpg" style="width:100%">
             <img class="mySlides" src="images/slideshow_3.jpg" style="width:100%">
         </div>
     <!--Slidewhow end-->
+        <!--Facebook-->
+        <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FHealthy-Food-blog-1074327759310133%2F&tabs&width=340&height=180&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="180" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>        <!--Facebook-->
+    <!--Articles show start-->
+        <div id="articles">
+
+        </div>
+    <!--Articles show end-->
     </section>
 
     <section id="viewLogin">
@@ -94,6 +111,7 @@
         <div id="recipes">
 
         </div>
+        <div class="backToTopContainer"><a href="#userGreeting"><button type="submit" id="backToTop" class="button" >Top</button></a></div>
     </section>
 
     <section id="viewMyRecipes">
@@ -123,6 +141,12 @@
 
     <section id="viewShowRecipe">
         <div><button id="backButton" class="button">Обратно към всички рецепти</button></div>
+        <!--adminski-->
+        <div id="showAuthorFullName"></div>
+        <div id="showAuthorAuthorId"></div>
+        <div id="showAuthorUsernamme"></div>
+        <div id="showAuthorAuthToken"></div>
+        <!--adminski-->
         <div>Дата на постване:</div>
         <div id="showRecipeDate"></div>
         <div>Заглавие на рецептата:</div>
