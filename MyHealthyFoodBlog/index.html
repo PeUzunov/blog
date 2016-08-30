@@ -16,16 +16,6 @@
 </head>
 
 <body>
-<!--Facebook
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/bg_BG/sdk.js#xfbml=1&version=v2.7";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
--->
 <header>
     <div class="navbar">
         <ul class="navbar-links">
@@ -42,9 +32,8 @@
             <li class="navbar-link" id="linkLogout" onclick="logout()">Изход</li>
         </ul>
         <div id="userGreeting"></div>
-        <div>Logo image goes here</div>
-		<div class="slideshow-container"></div>
     </div>
+    <div class="slideshow-container"></div>
 </header>
 
 <main>
@@ -61,19 +50,29 @@
     </div>
 
     <section id="viewHome">
-        <h1>Welcome to my blog. Here you will find easy recipes for healthy life</h1>
-        <div>Description text goes here</div>
+        <h1>Един сайт с ценни идеи и съвети за правилно хранене</h1>
 	<!--Slidewhow start-->
         <div class="w3-content w3-section">
-            <img class="mySlides" src="images/slideshow_1.jpg" style="width:100%">
-            <img class="mySlides" src="images/slideshow_2.jpg" style="width:100%">
-            <img class="mySlides" src="images/slideshow_3.jpg" style="width:100%">
+            <img class="mySlides" src="images/slideshow_1.jpg">
+            <img class="mySlides" src="images/slideshow_2.jpg">
+            <img class="mySlides" src="images/slideshow_3.jpg">
         </div>
     <!--Slidewhow end-->
+        <div class="description">
+            <p> Когато човек строи къща винаги започва с основата, върху която слага колоните, тухлите и накрая покрива. Същото е и със знанието – за да се научим да правим нещо добре ни е нужда солидна и здрава основа, върху която да стъпим. За това в тази статия сме събрали най-основните и най-важните стъпки за започване на здравословен живот, специално предназначени за начинаещи</p>
+        </div>
         <!--Facebook-->
         <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FHealthy-Food-blog-1074327759310133%2F&tabs&width=340&height=180&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="180" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>        <!--Facebook-->
+        <!--Facebook-->
+        <!--List last 3 recipes start-->
+        <div id="viewLastThreeRecipes">
+            <div id="lastThreeRecipes">
+
+            </div>
+        </div>
+        <!--List last 3 recipes end-->
     <!--Articles show start-->
-        <div id="articles">
+        <div id=>
 
         </div>
     <!--Articles show end-->
@@ -108,6 +107,21 @@
     </section>
 
     <section id="viewRecipes">
+        <div class="recipeCategoriesFilter">
+            <ul class="recipeCategoriesFilter-filters">
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategoryAll">Всички</li>
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategorySalads">Салати и дресинги</li>
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategoryBreads">Крекери, пици и хлябове</li>
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategoryBreakfast">Закуски</li>
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategoryMainDishes">Основни</li>
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategoryDeserts">Десерти</li>
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategoryVegetarian">Вегетариански</li>
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategoryGlutenFree">Безглутенови</li>
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategoryVegan">Веган</li>
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategoryForDiabetics">За диабетици</li>
+                <li class="recipeCategoriesFilter-filter" id="linkFilterCategoryOther">Разни</li>
+            </ul>
+        </div>
         <div id="recipes">
 
         </div>
@@ -140,28 +154,30 @@
 
 
     <section id="viewShowRecipe">
-        <div><button id="backButton" class="button">Обратно към всички рецепти</button></div>
-        <!--adminski-->
-        <div id="showAuthorFullName"></div>
-        <div id="showAuthorAuthorId"></div>
-        <div id="showAuthorUsernamme"></div>
-        <div id="showAuthorAuthToken"></div>
-        <!--adminski-->
-        <div>Дата на постване:</div>
-        <div id="showRecipeDate"></div>
-        <div>Заглавие на рецептата:</div>
-        <div id="showRecipeTitle"></div>
-        <div id="showImage">
-            <img src="" id="showRecipeImage" class="recipeImage"/>
+        <div id="singleRecipe">
+            <div><button id="backButton" class="button">Обратно към всички рецепти</button></div>
+            <!--adminski-->
+            <div id="showAuthorFullName"></div>
+            <div id="showAuthorAuthorId"></div>
+            <div id="showAuthorUsernamme"></div>
+            <div id="showAuthorAuthToken"></div>
+            <!--adminski-->
+            <div>Дата на постване:</div>
+            <div id="showRecipeDate"></div>
+            <div>Заглавие на рецептата:</div>
+            <div id="showRecipeTitle"></div>
+            <div id="showImage">
+                <img src="" id="showRecipeImage" class="recipeImage"/>
+            </div>
+            <div>Приготвяне:</div>
+            <div id="showRecipeDescription"></div>
+            <div>Цена:</div>
+            <div id="showRecipePrice"></div>
+            <div>Продукти:</div>
+            <div id="showRecipeProducts"></div>
+            <div>Автор:</div>
+            <div id="showRecipeUser"></div>
         </div>
-        <div>Приготвяне:</div>
-        <div id="showRecipeDescription"></div>
-        <div>Цена:</div>
-        <div id="showRecipePrice"></div>
-        <div>Продукти:</div>
-        <div id="showRecipeProducts"></div>
-        <div>Автор:</div>
-        <div id="showRecipeUser"></div>
     </section>
 
     <section id="viewNewRecipe">
@@ -230,7 +246,7 @@
             <div><textarea rows="15" id="recipeDescriptionEdit" maxlength="10000" required class="inputBox"></textarea></div>
             <div>Kaчи снимка:</div>
             <div><input type="url" id="recipeImageUrlEdit" class="inputBox" required placeholder="Required"></div>
-            <div><input type="submit" value="Publish" class="button"/></div>
+            <div><input type="submit" value="Публикувай" class="button"/></div>
         </form>
     </section>
 </main>
