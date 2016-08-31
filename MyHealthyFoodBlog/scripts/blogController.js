@@ -14,9 +14,10 @@ $(function() {
     $("#linkNewRecipe").click(function() {showView("NewRecipe");});
     $("#linkMyRecipes").click(function() {drawRecipes(sessionStorage.uid); showView("MyRecipes")});
     $("#linkProfile").click(function() {profileLoadInformation(); showView("Profile")});
-    //adminski
+    //Admin view only
     $("#linkUsers").click(function() {drawUsers(); showView("Users")});
-    //adminski
+    //Admin view only
+    $("#linkBloggerInformation").click(function() {bloggerInformation(); showView("#")});
     $("body").click(function () {$("#errorBox").slideUp(300)});
     $("#infoBox").click(function () {$("#infoBox").slideUp(300)});
     $("#formLogin").submit(function (f) {f.preventDefault(); login()});
@@ -78,11 +79,24 @@ function showView(viewId) {
         currentSelection.removeClass("current-selection");
         view.addClass("current-selection");
     }
-
-    // Filter recipes start
-
-    // Filter recipes end
 }
+// Filter recipes start
+function selectFilter(filterId) {
+    let sections = $("main > section");
+    let buttons = $(".recipeCategoriesFilter-filter");
+    let button = $("#link" + filterId);
+    if (!sections.is(':animated')) {
+
+        buttons.removeClass("selected");
+        button.addClass("selected");
+        let currentSelection = $(".current-selection");
+        $(".previous-selection").removeClass("previous-selection");
+        currentSelection.addClass("previous-selection");
+        currentSelection.removeClass("current-selection");
+
+    }
+}
+// Filter recipes end
 
 function showPreviousView() {
     if ($(".previous-selection").attr("id") == "viewMyRecipes") {
@@ -103,11 +117,11 @@ function showHideNavigationLinks() {
         $("#linkProfile").show();
         $("#linkLogout").show();
         $("#userGreeting").append("Здравей, " + sessionStorage.username + "!");
-        // adminski
+        //Admin view only
         if (sessionStorage.username == 'admin') {
             $("#linkUsers").show();
         }
-        // adminski
+        //Admin view only
     } else {
         $("#linkLogin").show();
         $("#linkRegister").show();
@@ -115,9 +129,9 @@ function showHideNavigationLinks() {
         $("#linkNewRecipe").hide();
         $("#linkMyRecipes").hide();
         $("#linkProfile").hide();
-        //adminski
+        //Admin view only
         $("#linkUsers").hide();
-        //adminski
+        //Admin view only
         $("#linkLogout").hide();
         $("#userGreeting").empty();
     }
@@ -153,7 +167,7 @@ function login() {
 function register()  {
     let regexUsermane = /^[a-zA-Z0-9]+$/;
     let regexPassword = /^[a-zA-Z0-9]+$/;
-    let regexFullname = /^[a-zA-Z]+$/;
+    let regexFullname = /^[a-zA-Z ]+$/;
     let regexEmail = /^[a-zA-Z]+[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 
     if(($('#registerUser').val().length >= 5) &&($('#registerUser').val().length <= 20) && (regexUsermane.test($('#registerUser').val()))){
@@ -243,42 +257,72 @@ function profileLoadInformation() {
     username.text(sessionStorage.username);
 }
 
-function createRecipe() {
-    let recipesUrl = kinveyBaseUrl + "appdata/" + kinveyAppID + "/recipes";
-    let authHeaders = {"Authorization": "Kinvey " + sessionStorage.authToken};
-    let newRecipeData = {
-        title: $("#recipeTitle").val(),
-        category: $("#recipeCategory").val(),
-        servings: $("#recipeServings").val(),
-        preparationTime: $("#recipePreparationTime").val(),
-        makingTime: $("#recipeMakingTime").val(),
-        price: $("#recipePrice").val(),
-        products: $("#recipeProducts").val(),
-        description: $("#recipeDescription").val(),
-        image: $("#recipeImageUrl").val(),
-        date: moment().locale("bg").format('llll'),
-        authorId: sessionStorage.uid,
-        authorUsername: sessionStorage.username,
-        authorFullName: sessionStorage.fullname,
-        authorAuthToken: sessionStorage.authToken
+function bloggerInformation() { // TODO: Information about the blogger, Admin should be able to edit it
+    alert("Предстой да бъде разработено!");
+}
+
+function createRecipe() {  // pravi buton submit, trqbav da napisnesh publikuvai dva pati za da sazdade recepta
+    let ospry = new Ospry('pk-prod-dl2v8imnl11h4iauctvxg9k0');
+    let uploadURL;
+    let fileName = $('#fileName').val;
+    //console.log(fileName);
+    let onUpload = function(err, metadata) {
+        ospry.get({
+            url: metadata.url,
+            maxHeight: 400
+        });
+        uploadURL = metadata.url;
+        console.log(uploadURL);
+
+        let recipesUrl = kinveyBaseUrl + "appdata/" + kinveyAppID + "/recipes";
+
+        let uploadData = {
+            title: $("#recipeTitle").val(),
+            category: $("#recipeCategory").val(),
+            servings: $("#recipeServings").val(),
+            preparationTime: $("#recipePreparationTime").val(),
+            makingTime: $("#recipeMakingTime").val(),
+            price: $("#recipePrice").val(),
+            products: $("#recipeProducts").val(),
+            description: $("#recipeDescription").val(),
+            image: $("#recipeImageUrl").val(),
+            file: uploadURL, // patq za upload
+            date: moment().locale("bg").format('llll'),
+            authorId: sessionStorage.uid,
+            authorUsername: sessionStorage.username,
+            authorFullName: sessionStorage.fullname,
+            authorAuthToken: sessionStorage.authToken
+        };
+
+        let authHeaders = {"Authorization": "Kinvey " + sessionStorage.authToken};
+            $.ajax({
+                method: "POST",
+                url: recipesUrl,
+                data: uploadData,
+                headers: authHeaders,
+                success: recipeCreated,
+                error: showAjaxError
+        });
     };
-    $.ajax({
-        method: "POST",
-        url: recipesUrl,
-        data: newRecipeData,
-        headers: authHeaders,
-        success: recipeCreated,
-        error: showAjaxError
-    });
+
     function recipeCreated(data) {
         let recipeInputFields = $("#viewNewRecipe").find("input");
         let recipeTextAreaFields = $("#viewNewRecipe").find("textarea");
         recipeInputFields.val("");
         recipeTextAreaFields.val("");
-        tinyMCE.activeEditor.setContent('');
+        // tinyMCE.activeEditor.setContent(''); // Text Editor
         showView("Recipes");
         showInfo("Успешно публикувахте рецепта!")
     }
+
+    $('#formCreateRecipe').submit(function(e) {
+        //console.log(e)
+        e.preventDefault();
+        ospry.up({
+            form: this,
+            imageReady: onUpload
+        });
+    });
 }
 
 // Admin functionality start
@@ -315,14 +359,14 @@ function drawUsers(userID) {
     }
 }
 
-function editUserProfile() {
+function editUserProfile() { // TODO: Admin should be able to Edit and Delete users' data
     alert("Предстой да бъде разработено!");
 }
 // Admin functionality end
 
 //Show last 3 recipes on Home page start
 function drawLastThreeRecipes() {
-    let authBase64 = btoa("test:test");
+    let authBase64 = btoa("guest:guest");
     let recipesGetUrl = kinveyBaseUrl + "appdata/" + kinveyAppID + "/recipes";
     let authHeaders = {"Authorization": "Basic " + authBase64};
 
@@ -350,7 +394,7 @@ function drawLastThreeRecipes() {
 function drawRecipes(userID) {
     let getForUser = (userID != null);
     let loggedIn = (sessionStorage.authToken != null);
-    let authBase64 = btoa("test:test");
+    let authBase64 = btoa("guest:guest");
     let recipesGetUrl = kinveyBaseUrl + "appdata/" + kinveyAppID + "/recipes";
     let authHeaders;
     if (loggedIn){
@@ -366,22 +410,22 @@ function drawRecipes(userID) {
         error: showAjaxError
     });
 
-// Filter recipes start
-    $("#linkFilterCategoryAll").click(function() {});
-    $("#linkFilterCategorySalads").click(function() {});
-    $("#linkFilterCategoryBreads").click(function() {});
-    $("#linkFilterCategoryBreakfast").click(function() {});
-    $("#linkFilterCategoryMainDishes").click(function() {});
-    $("#linkFilterCategoryDeserts").click(function() {});
-    $("#linkFilterCategoryVegetarian").click(function() {});
-    $("#linkFilterCategoryGlutenFree").click(function() {});
-    $("#linkFilterCategoryVegan").click(function() {});
-    $("#linkFilterCategoryForDiabetics").click(function() {});
-    $("#linkFilterCategoryOther").click(function() {});
+// Filter recipes start // TODO: filter by category
+    $("#linkFilterCategoryAll").click(function() {selectFilter("FilterCategoryAll")});
+    $("#linkFilterCategorySalads").click(function() {selectFilter("FilterCategorySalads")});
+    $("#linkFilterCategoryBreads").click(function() {selectFilter("FilterCategoryBreads")});
+    $("#linkFilterCategoryBreakfast").click(function() {selectFilter("FilterCategoryBreakfast")});
+    $("#linkFilterCategoryMainDishes").click(function() {selectFilter("FilterCategoryMainDishes")});
+    $("#linkFilterCategoryDeserts").click(function() {selectFilter("FilterCategoryDeserts")});
+    $("#linkFilterCategoryVegetarian").click(function() {selectFilter("FilterCategoryVegetarian")});
+    $("#linkFilterCategoryGlutenFree").click(function() {selectFilter("FilterCategoryGlutenFree")});
+    $("#linkFilterCategoryVegan").click(function() {selectFilter("FilterCategoryVegan")});
+    $("#linkFilterCategoryForDiabetics").click(function() {selectFilter("FilterCategoryForDiabetics")});
+    $("#linkFilterCategoryOther").click(function() {selectFilter("FilterCategoryOther")});
 // Filter recipes end
 
 
-    function recipesLoaded (recipes, status) {
+    function recipesLoaded ( recipes, status) {
         $("#recipes").empty();
         $("#myRecipes").empty();
         if (getForUser) {
@@ -396,8 +440,9 @@ function drawRecipes(userID) {
                         minutes = totalTime + " минути"
                     }
                     let recipeDiv = $("<div>", {"class": "recipeBox", "data-recipe-id" : recipe._id});
-                    recipeDiv.append($("<div>").append($('<img>', {src: recipe.image, height: 230})));
+                    // recipeDiv.append($("<div>").append($('<img>', {src: recipe.image, height: 230})));
                     recipeDiv.append($("<div class='recipeTitle'>").append(recipe.title));
+                    recipeDiv.append($("<div class='recipeImageUpload'>").html($('<a href='+ recipe.file +' target="_blank"><img src=' + recipe.file + '></a>')));
                     recipeDiv.append($("<div class='recipeCategory'>").append("Категория: " + recipe.category));
                     recipeDiv.append($("<div class='recipeProducts'>").append("Необходими продукти: " + recipe.products));
                     recipeDiv.append($("<div class='recipeTotalPreparationTime'>").append("общо време за приготвяне: " + hours + minutes));
@@ -406,9 +451,9 @@ function drawRecipes(userID) {
             }
         } else {
             for (let recipe of recipes) {
-                if(recipe.category !== "Салати и дресинги"){
+                /*if(recipe.category !== "Основни"){ // TODO: filter by category code
                     continue;
-                }
+                }*/
                 let totalTime = parseInt(recipe.preparationTime) + parseInt(recipe.makingTime);
                 if(totalTime >= 60) {
                     var hours = Math.trunc(totalTime / 60) + " часа и ";
@@ -418,8 +463,9 @@ function drawRecipes(userID) {
                     minutes = totalTime + " минути"
                 }
                 let recipeDiv = $("<div>", {class: "recipeBox", "data-recipe-id" : recipe._id});
-                recipeDiv.append($("<div>").append($('<img>', {src: recipe.image})));
+                // recipeDiv.append($("<div>").append($('<img>', {src: recipe.image})));
                 recipeDiv.append($("<div class='recipeTitle'>").append(recipe.title));
+                recipeDiv.append($("<div class='recipeImageUpload'>").html($('<a href='+ recipe.file +' target="_blank"><img src=' + recipe.file + '></a>')));
                 recipeDiv.append($("<div class='recipeCategory'>").append("Категория: " + recipe.category));
                 recipeDiv.append($("<div class='recipeProducts'>").append("Необходими продукти: " + recipe.products));
                 recipeDiv.append($("<div class='recipeTotalPreparationTime'>").append("общо време за приготвяне: " + hours + minutes));
@@ -432,7 +478,7 @@ function drawRecipes(userID) {
 
 function showRecipe(recipeId) {
     let loggedIn = (sessionStorage.authToken != null);
-    let authBase64 = btoa("test:test");
+    let authBase64 = btoa("guest:guest");
     let recipeGetUrl = kinveyBaseUrl + "appdata/" + kinveyAppID + "/recipes/" + recipeId;
     let authHeaders;
     if (loggedIn){
@@ -447,27 +493,26 @@ function showRecipe(recipeId) {
         success: recipeLoaded,
         error: showAjaxError
     });
-    function recipeLoaded(recipe) { // zarejda nqkoi poleta po dva pati
+    function recipeLoaded(recipe) {
         $(".func").remove();
-        //adminski
+        //Admin view start
         if (sessionStorage.username == 'admin') {
-             // zashto izliza nai dolu na stranicata???
             $('#showAuthorFullName').text(recipe.authorFullName);
             $('#showAuthorAuthorId').text(recipe.authorId);
             $('#showAuthorUsernamme').text(recipe.authorUsername);
             $('#showAuthorAuthToken').text(recipe.authorAuthToken);
         }
-        //adminski
+        //Admin view end
 
         $('#showRecipeDate').text(recipe.date);
-        $('#showRecipeTitle').text(recipe.title);
+        $('#showRecipeTitle').text(recipe.title); //+ "zagavietoOOOO");
         $('#showRecipeCategory').text(recipe.category);
         $('#showRecipeServings').text(recipe.servings);
         $('#showRecipePreparationTime').text(recipe.preparationTime);
         $('#showRecipeMakingTime').text(recipe.makingTime);
         $('#showRecipePrice').text(recipe.price);
-        $('#showRecipeProducts').text(recipe.products);
-        $('#showRecipeDescription').text(recipe.description);
+        $('#showRecipeProducts').html(recipe.products);
+        $('#showRecipeDescription').html(recipe.description);
         $('#showRecipeImage').prop("src", recipe.image);
         $('#showRecipeUser').text(recipe.authorUsername);
         let sel = $('#viewShowRecipe');
@@ -484,31 +529,26 @@ function showRecipe(recipeId) {
 
 function showEditRecipeView(recipeId) {
     $("#viewEditRecipe").attr("data-post-id", recipeId);
-    //adminski
-    //let userAuthTokenShow = $('#showUserAuthToken').text();
-    //adminski
 
-    let postTitle = $('#showRecipeTitle').text();
-    let postCategory = $('#showRecipeCategory').attr("data-post-category");
-    let postServings = $('#showRecipeServings').text();
-    let postPreparationTime = $('#showRecipePreparationTime').text();
-    let postRecipeMakingTime = $('#showRecipeMakingTime').text();
-    let postPrice = $('#showRecipePrice').text();
-    let postProducts = $('#showRecipeProducts').text();
-    let postDescription = $('#showRecipeDescription').text();
-    let postImage= $('#showRecipeImage').attr("src");
-    //adminski
-   // $('#showUserAuthTokenEdit').val(userAuthTokenShow);
-    //adminski
-    $('#recipeTitleEdit').val(postTitle);
-    $('#recipeCategoryEdit').val(postCategory);
-    $('#showRecipeServingsEdit').val(postServings);
-    $('#showRecipePreparationTimeEdit').val(postPreparationTime);
-    $('#showRecipeMakingTimeEdit').val(postRecipeMakingTime);
-    $('#showRecipePriceEdit').val(postPrice);
-    $('#showRecipeProductsEdit').val(postProducts);
-    $('#recipeDescriptionEdit').val(postDescription);
-    $('#showRecipeImageEdit').val(postImage);
+    let recipeTitle = $('#showRecipeTitle').text();
+    let recipeCategory = $('#showRecipeCategory').attr("data-post-category");
+    let recipeServings = $('#showRecipeServings').text();
+    let recipePreparationTime = $('#showRecipePreparationTime').text();
+    let recipeRecipeMakingTime = $('#showRecipeMakingTime').text();
+    let recipePrice = $('#showRecipePrice').text();
+    let recipeProducts = $('#showRecipeProducts').text();
+    let recipeDescription = $('#showRecipeDescription').text();
+    let recipeImage= $('#showRecipeImage').attr("src");
+
+    $('#recipeTitleEdit').val(recipeTitle);
+    $('#recipeCategoryEdit').val(recipeCategory);
+    $('#showRecipeServingsEdit').val(recipeServings);
+    $('#showRecipePreparationTimeEdit').val(recipePreparationTime);
+    $('#showRecipeMakingTimeEdit').val(recipeRecipeMakingTime);
+    $('#showRecipePriceEdit').val(recipePrice);
+    $('#showRecipeProductsEdit').val(recipeProducts);
+    $('#recipeDescriptionEdit').val(recipeDescription);
+    $('#showRecipeImageEdit').val(recipeImage);
     showView("EditRecipe");
 }
 
@@ -519,20 +559,15 @@ function editRecipe(recipeId) {
     let authorAuthTokenEdit = sessionStorage.authToken;
 
     let recipeEditUrl = kinveyBaseUrl + "appdata/" + kinveyAppID + "/recipes/" + recipeId;
-    // adminski
     if (sessionStorage.username == 'admin') {
         authorFullNameEdit = $('#showAuthorFullName').text();
         authorIdEdit = $('#showAuthorAuthorId').text();
         authorUsernameEdit = $('#showAuthorUsernamme').text();
         authorAuthTokenEdit = $('#showAuthorAuthToken').text();
     }
-    // adminski
-    console.log(authorAuthTokenEdit + " sled definirane");
 
     let authHeaders = {"Authorization": "Kinvey " + authorAuthTokenEdit};
 
-    // let authHeaders = {"Authorization": "Kinvey " + "a8bd8dc6-37fd-45af-9b52-365b84452f2b.Vrrt/Lm2DGRxa1xIpdvmbiCNtFNjolG+EnzxID3G2Yk="};
-    // kato e slojeno tova raboti za vsichki recepti na test, zashtoto tova e negoviq auth token. trqbva ako e lognata admina, da se vzema na vsqka recepta auth tokena, username i vsichki ostnali danni da usera koito e sazdal tazi recepta i da se zaman[ samo auth tokena na adnima s tozi na usera sazdal receptata. taka pri edit avtora shte ostva sashtiq.
     let putData = {
         title: $("#recipeTitleEdit").val(),
         category: $("#recipeCategoryEdit").val(),
@@ -543,14 +578,13 @@ function editRecipe(recipeId) {
         products: $("#recipeProductsEdit").val(),
         description: $("#recipeDescriptionEdit").val(),
         image: $("#recipeImageUrlEdit").val(),
+        date: moment().locale("bg").format('llll'),
         authorFullName: authorFullNameEdit,
         authorId: authorIdEdit,
         authorUsername: authorUsernameEdit,
-        // adminski
         authorAuthToken: authorAuthTokenEdit
-        // adminski
     };
-    console.log(authorAuthTokenEdit + " predi ajax");
+
     $.ajax({
         method: "PUT",
         url: recipeEditUrl,
@@ -563,8 +597,6 @@ function editRecipe(recipeId) {
         showInfo("Успешно редактирахте рецепта!");
         showView("MyRecipes");
     }
-    console.log(authorAuthTokenEdit + " v kraq");
-    console.log(authHeaders);
 }
 
 function showDeleteRecipeConfirmation() {

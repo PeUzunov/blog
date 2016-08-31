@@ -10,9 +10,10 @@
     <link rel="stylesheet" type="text/css" href="styles/main-style.css"/>
     <link rel="icon" href="images/fv.ico" type="image/png" sizes="16x16">
     <link rel="images/fv.png" type="image/png" href="http://eg.com/favicon.png"/>
-    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-    <script>tinymce.init({ selector:'textarea#recipeProducts' });</script>
-    <script>tinymce.init({ selector:'textarea#recipeDescription' });</script>
+    <script src="https://code.ospry.io/v1/ospry.js"></script> <!--Upload File-->
+    <!--<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>-->
+    <!--<script>tinymce.init({ selector:'textarea#recipeProducts' });</script>-->
+    <!--<script>tinymce.init({ selector:'textarea#recipeDescription' });</script>-->
 </head>
 
 <body>
@@ -26,9 +27,10 @@
             <li class="navbar-link" id="linkNewRecipe">Нова Рецепта</li>
             <li class="navbar-link" id="linkMyRecipes">Моите Рецепти</li>
             <li class="navbar-link" id="linkProfile">Профил</li>
-            <!--adminski-->
+            <!--admin view only-->
             <li class="navbar-link" id="linkUsers">Потребители</li>
-            <!--adminski-->
+            <!--admin view only-->
+            <li class="navbar-link" id="linkBloggerInformation">За мен</li>
             <li class="navbar-link" id="linkLogout" onclick="logout()">Изход</li>
         </ul>
         <div id="userGreeting"></div>
@@ -59,11 +61,8 @@
         </div>
     <!--Slidewhow end-->
         <div class="description">
-            <p> Когато човек строи къща винаги започва с основата, върху която слага колоните, тухлите и накрая покрива. Същото е и със знанието – за да се научим да правим нещо добре ни е нужда солидна и здрава основа, върху която да стъпим. За това в тази статия сме събрали най-основните и най-важните стъпки за започване на здравословен живот, специално предназначени за начинаещи</p>
+            <p> Когато човек строи къща винаги започва с основата, върху която слага колоните, тухлите и накрая покрива. Същото е и със знанието – за да се научим да правим нещо добре ни е нужда солидна и здрава основа, върху която да стъпим. За това в тази статия сме събрали най-основните и най-важните стъпки за започване на здравословен живот, специално предназначени за начинаещи.</p>
         </div>
-        <!--Facebook-->
-        <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FHealthy-Food-blog-1074327759310133%2F&tabs&width=340&height=180&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="180" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>        <!--Facebook-->
-        <!--Facebook-->
         <!--List last 3 recipes start-->
         <div id="viewLastThreeRecipes">
             <div id="lastThreeRecipes">
@@ -71,6 +70,11 @@
             </div>
         </div>
         <!--List last 3 recipes end-->
+        <!--Facebook-->
+        <div class="facebookBox">
+            <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FHealthy-Food-blog-1074327759310133%2F&tabs&width=340&height=180&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="180" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+        </div>
+        <!--Facebook-->
     <!--Articles show start-->
         <div id=>
 
@@ -80,7 +84,7 @@
 
     <section id="viewLogin">
         <h1>Вход за потребители</h1>
-        <form id="formLogin" name="myform" novalidate>
+        <form id="formLogin">
             <div>Потребителско име:</div>
             <div><input type="text" id="loginUser" placeholder="Enter Username" required class="inputBox"></div>
             <div>Парола:</div>
@@ -143,14 +147,20 @@
         <div id="profileEmail"></div>
     </section>
 
-<!--adminski-->
+    <section id="viewBloggerInformation">
+        <div>Информация за мен</div>
+        <div id="bloggerInformation">
+
+        </div>
+    </section>
+    <!--Admin view only-->
     <section id="viewUsers">
         <div>Всички регистрирани потребители</div>
         <div id="users">
 
         </div>
     </section>
-<!--adminski-->
+    <!--Admin view only-->
 
 
     <section id="viewShowRecipe">
@@ -181,7 +191,7 @@
     </section>
 
     <section id="viewNewRecipe">
-        <form id="formCreateRecipe" name="myform" novalidate>
+        <form id="formCreateRecipe">
             <div>Име на рецептата:</div>
             <div><input type="text" id="recipeTitle" maxlength="100" required class="inputBox"/></div>
             <div>Категория:</div>
@@ -211,12 +221,15 @@
             <div><textarea rows="15" id="recipeDescription" maxlength="10000" required class="inputBox"></textarea></div>
             <div>Kaчи снимка:</div>
             <div><input type="url" id="recipeImageUrl" class="inputBox" required placeholder="Required"></div>
-            <div><input type="submit" value="Publish" class="button"/></div>
+            <!--Upload File-->
+            <div><input type="file" multiple id="recipeImageUpload" class="inputBox" required placeholder="Required"></div>
+            <!--Upload File-->
+            <div><input type="submit" value="Публикувай" class="button" id="uploadRec"/></div>
         </form>
     </section>
 
     <section id="viewEditRecipe">
-        <form id="formEditRecipe" name="myform" novalidate>
+        <form id="formEditRecipe">
             <div>Име на рецептата:</div>
             <div><input type="text" id="recipeTitleEdit" maxlength="100" required class="inputBox"/></div>
             <div>Категория:</div>
@@ -252,7 +265,7 @@
 </main>
 
 <footer>
-    <p> &copy; HealthyFoodBlog </p>
+    <p> &copy; 2016 - HealthyFoodBlog. Всички права запазени</p>
 </footer>
 </body>
 </html>
