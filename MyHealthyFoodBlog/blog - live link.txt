@@ -1,0 +1,3 @@
+link - http://healthyfood.cloudvps.bg/
+
+As you can see from the commit history I have submited only this file after the deadline. This is because I have submited the blog live link in the Teamwork - Defense homework. Now I have change it with the GitHub blog repository. Hope this will not be considered as a mistake.
